@@ -37,7 +37,7 @@ if [ $? -gt 0 ]; then
 fi
 
 echo -e "\n[+] Running Ansible 4 Kali playbooks\n"
-ansible-playbook -i inventory --ask-become-pass -e "kali_user=$USER" main.yml
+ansible-playbook -i inventory --ask-become-pass -e "kali_user=$USER" --extra-vars "ansible_sudo_pass=password" main.yml
 if [ $? -gt 0 ]; then
     echo "[!] Error occurred during playbook run."
     exit 1    
