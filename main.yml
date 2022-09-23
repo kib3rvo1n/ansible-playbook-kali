@@ -22,26 +22,26 @@
         default_shell: /bin/zsh
         default_groups: sudo
 
-#     - name: Set burpsuite_edition
-#       ansible.builtin.set_fact:
-#         burpsuite_edition: "{{ ansible_local['burpsuite'][burpsuite_user]['edition'] }}"
-#       when: ansible_local['burpsuite'][burpsuite_user]['edition'] is defined
+    - name: Set burpsuite_edition
+      ansible.builtin.set_fact:
+        burpsuite_edition: "{{ ansible_local['burpsuite'][burpsuite_user]['edition'] }}"
+      when: ansible_local['burpsuite'][burpsuite_user]['edition'] is defined
 
-#     - block:
-#         - name: Burp Suite edition prompt
-#           ansible.builtin.pause:
-#             prompt: |
-#               Which Burp Suite edition to install?
-#                 {% for p in burpsuite_editions_map %}
-#                 {{ loop.index }}. {{ p['name'] }}
-#                 {% endfor %}
+    - block:
+        - name: Burp Suite edition prompt
+          ansible.builtin.pause:
+            prompt: |
+              Which Burp Suite edition to install?
+                {% for p in burpsuite_editions_map %}
+                {{ loop.index }}. {{ p['name'] }}
+                {% endfor %}
 
-#               Enter the number for the product:
-#           register: _burpsuite_edition_choice
+              Enter the number for the product:
+          register: _burpsuite_edition_choice
 
         - name: Set burp_edition
           ansible.builtin.set_fact:
-            burpsuite_edition: "{{ burpsuite_editions_map[1|default(omit)|int - 1]['alias'] }}"
+            burpsuite_edition: "{{ burpsuite_editions_map[_burpsuite_edition_choice.user_input|default(omit)|int - 1]['alias'] }}"
       when: ansible_local['burpsuite'][burpsuite_user]['edition'] is undefined
 
     - name: Set burpsuite_licensed
